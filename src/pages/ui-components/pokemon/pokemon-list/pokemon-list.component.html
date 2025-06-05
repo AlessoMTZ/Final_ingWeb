@@ -1,0 +1,32 @@
+<mat-card class="cardWithShadow m-t-16">
+    <mat-card-content>
+      <div class="d-flex">
+        <div class="m-r-auto m-b-8">
+          <mat-card-title>Pokemon</mat-card-title>
+          <mat-card-subtitle>Lista de pokemon</mat-card-subtitle>
+        </div>
+
+      </div>
+      
+  
+      <div class="table-responsive">
+        <table class="w-100">
+          <thead>
+            <tr>
+              <th class="f-w-600 f-s-14">Pokemon</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let Pokemon of PokemonList">
+              <td class="text-center">{{ Pokemon.name }}</td>
+     
+              <td class="text-center">
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>  
