@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../services/pokemon.service';
-import { Pokemon, PokemonListResponse } from '../../models/pokemon.interface';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -118,11 +117,11 @@ import { RouterLink } from '@angular/router';
   `]
 })
 export class PokemonListComponent implements OnInit {
-  pokemonList: Pokemon[] = [];
-  offset = 0;
-  limit = 20;
-  hasNext = false;
-  hasPrevious = false;
+  pokemonList: any[] = [];
+  hasNext: boolean = false;
+  hasPrevious: boolean = false;
+  private offset: number = 0;
+  private limit: number = 20;
 
   constructor(private pokemonService: PokemonService) {}
 
@@ -131,12 +130,13 @@ export class PokemonListComponent implements OnInit {
   }
 
   loadPokemon() {
-    this.pokemonService.getPokemonList(this.offset, this.limit).subscribe((response: PokemonListResponse) => {
+    this.pokemonService.getPokemonList(this.offset, this.limit).subscribe((response: any) => {
+      const results = response.results;
       this.hasNext = !!response.next;
       this.hasPrevious = !!response.previous;
-      
-      response.results.forEach(pokemon => {
-        this.pokemonService.getPokemonDetails(pokemon.name).subscribe((details: Pokemon) => {
+      this.pokemonList = [];
+      results.forEach((pokemon: any) => {
+        this.pokemonService.getPokemonDetails(pokemon.name).subscribe((details: any) => {
           this.pokemonList.push(details);
         });
       });
@@ -144,18 +144,12 @@ export class PokemonListComponent implements OnInit {
   }
 
   nextPage() {
-    if (this.hasNext) {
-      this.offset += this.limit;
-      this.pokemonList = [];
-      this.loadPokemon();
-    }
+    this.offset += this.limit;
+    this.loadPokemon();
   }
 
   previousPage() {
-    if (this.hasPrevious) {
-      this.offset -= this.limit;
-      this.pokemonList = [];
-      this.loadPokemon();
-    }
+    this.offset -= this.limit;
+    this.loadPokemon();
   }
 } 
