@@ -1,1 +1,121 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Variables globales */
+:root {
+  --pokedex-red: #e3350d;
+  --pokedex-dark-red: #c22e0b;
+  --pokedex-light: #f2f2f2;
+  --pokedex-dark: #333333;
+  --pokedex-screen: #88c070;
+  --pokedex-screen-dark: #306230;
+}
+
+/* Estilos globales */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Press Start 2P', cursive;
+  background-color: var(--pokedex-dark);
+  color: var(--pokedex-light);
+}
+
+/* Clase para el contenedor principal de la Pokédex */
+.pokedex-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  background-color: var(--pokedex-red);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+/* Estilo para la pantalla de la Pokédex */
+.pokedex-screen {
+  background-color: var(--pokedex-screen);
+  border: 10px solid var(--pokedex-dark);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  min-height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Estilo para los botones de la Pokédex */
+.pokedex-button {
+  background-color: var(--pokedex-dark-red);
+  color: var(--pokedex-light);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.pokedex-button:hover {
+  background-color: var(--pokedex-dark);
+  transform: scale(1.05);
+}
+
+/* Estilo para las tarjetas de región */
+.region-card {
+  background-color: var(--pokedex-light);
+  color: var(--pokedex-dark);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.region-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo para la lista de Pokémon */
+.pokemon-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Estilo para las tarjetas de Pokémon */
+.pokemon-card {
+  background-color: var(--pokedex-light);
+  color: var(--pokedex-dark);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pokemon-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo para los detalles del Pokémon */
+.pokemon-details {
+  background-color: var(--pokedex-light);
+  color: var(--pokedex-dark);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+/* Animación para la pantalla de la Pokédex */
+@keyframes screenFlicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+.pokedex-screen {
+  animation: screenFlicker 2s infinite;
+}
