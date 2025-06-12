@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { RegionService, Region } from '../../services/region.service';
 import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component';
 import { PokemonService } from '../../services/pokemon.service';
@@ -10,17 +10,17 @@ import { PokemonService } from '../../services/pokemon.service';
   standalone: true,
   imports: [CommonModule, RouterModule, PokedexFrameComponent],
   template: `
-    <app-pokedex-frame>
+    <app-pokedex-frame (volver)="volver()">
       <div class="region-detail-content">
         <div class="header">
-          <button class="pokedex-button" routerLink="/regions">← Volver</button>
           <h1>{{ region?.name | titlecase }}</h1>
         </div>
         
         <div class="pokemon-grid" *ngIf="pokemonList.length">
           <div *ngFor="let poke of pokemonList" 
                class="pokemon-card"
-               [routerLink]="['/pokemon', poke.name]">
+               [routerLink]="['/pokemon', poke.name]"
+               [queryParams]="{ region: region?.id }">
             <img [src]="poke.sprite" [alt]="poke.name" width="80" height="80" />
             <h3>{{ poke.name | titlecase }}</h3>
           </div>
@@ -108,7 +108,8 @@ export class RegionDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private regionService: RegionService,
-    private pokemonService: PokemonService
+    private pokemonService: PokemonService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -138,5 +139,9 @@ export class RegionDetailComponent implements OnInit {
         }
       });
     });
+  }
+
+  volver() {
+    this.router.navigate(['/regions']);
   }
 } 

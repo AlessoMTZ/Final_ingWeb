@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PokemonService } from '../../services/pokemon.service';
 import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component';
 
@@ -9,9 +9,8 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
   standalone: true,
   imports: [CommonModule, RouterLink, PokedexFrameComponent],
   template: `
-    <app-pokedex-frame [id]="pokemon?.id">
+    <app-pokedex-frame [id]="pokemon?.id" (volver)="volver()">
       <div class="pokemon-header">
-        <a routerLink="/regions" class="pokedex-button volver-btn">Volver</a>
         <h1>{{ pokemon.name | titlecase }}</h1>
       </div>
       <div class="pokemon-detail-content">
@@ -24,11 +23,13 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
             <span *ngFor="let type of pokemon.types" class="type-badge" [class]="type.type.name">{{ type.type.name }}</span>
           </div>
           <div class="poke-characteristics">
-            <span>Altura: {{ pokemon.height / 10 }} m</span> |
+            <span>Altura: {{ pokemon.height / 10 }} m</span> 
+            <br>  
             <span>Peso: {{ pokemon.weight / 10 }} kg</span>
           </div>
           <div class="poke-abilities">
             <strong>Habilidades ({{ pokemon.abilities.length }}):</strong>
+            <br>
             <span *ngFor="let ab of pokemon.abilities">{{ ab.ability.name }} </span>
           </div>
           <div class="poke-stats">
@@ -135,22 +136,19 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
     .pokemon-header {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 0.7rem;
       margin-bottom: 1.5rem;
-    }
-    .volver-btn {
-      margin: 0;
-      padding: 0.7rem 2rem;
-      font-size: 1.1rem;
-      min-width: 120px;
-      text-align: center;
-      box-shadow: 0 2px 8px #0004;
+      justify-content: center;
     }
     .pokemon-header h1 {
       margin: 0;
       color: var(--pokedex-dark);
-      font-size: 2rem;
+      font-size: 1.3rem;
       flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
     }
     .pokedex-button { background-color: #b71c1c; color: #fff; border: none; padding: 0.7rem 2rem; border-radius: 8px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 1rem; transition: all 0.3s ease; margin-top: 1rem; }
     .pokedex-button:hover { background-color: #222; color: #e6e600; transform: scale(1.05); }
@@ -162,7 +160,7 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
     .type-badge { padding: 2px 10px; border-radius: 10px; color: #fff; font-size: 0.9em; text-shadow: 1px 1px 2px #222; font-weight: bold; border: 1.5px solid #222; box-shadow: 1px 1px 2px #2222; min-width: 60px; text-align: center; text-transform: uppercase; }
     .normal { background-color: #A8A878; } .fire { background-color: #F08030; } .water { background-color: #6890F0; } .electric { background-color: #F8D030; } .grass { background-color: #78C850; } .ice { background-color: #98D8D8; } .fighting { background-color: #C03028; } .poison { background-color: #A040A0; } .ground { background-color: #E0C068; } .flying { background-color: #A890F0; } .psychic { background-color: #F85888; } .bug { background-color: #A8B820; } .rock { background-color: #B8A038; } .ghost { background-color: #705898; } .dragon { background-color: #7038F8; } .dark { background-color: #705848; } .steel { background-color: #B8B8D0; } .fairy { background-color: #EE99AC; }
     .poke-characteristics { font-size: 0.95em; margin-bottom: 0.3rem; }
-    .poke-abilities { font-size: 0.95em; margin-bottom: 0.3rem; }
+    .poke-abilities { font-size: 0.80em; margin-bottom: 0.3rem; color: #111; }
     .poke-stats { font-size: 0.95em; margin-bottom: 0.3rem; color: #111; padding: 0.5em 0.7em; background: rgba(255,255,255,0.25); border-radius: 8px; }
     .poke-stats span { display: block; padding: 2px 0 2px 8px; color: #111; }
     .poke-regions ul { margin: 0.2em 0 0 0.5em; padding: 0; list-style: disc inside; }
@@ -174,15 +172,18 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
 export class PokemonDetailComponent implements OnInit {
   pokemon: any;
   regions: string[] = [];
+  private regionFrom: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private pokemonService: PokemonService
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       const name = params['name'];
+      this.regionFrom = this.route.snapshot.queryParamMap.get('region');
       this.pokemonService.getPokemonDetails(name).subscribe((pokemon: any) => {
         this.pokemon = pokemon;
         this.pokemonService.getPokemonSpecies(name).subscribe((species: any) => {
@@ -190,5 +191,13 @@ export class PokemonDetailComponent implements OnInit {
         });
       });
     });
+  }
+
+  volver() {
+    if (this.regionFrom) {
+      this.router.navigate(['/region', this.regionFrom]);
+    } else {
+      this.router.navigate(['/regions']);
+    }
   }
 } 

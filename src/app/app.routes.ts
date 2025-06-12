@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
+import { WelcomeComponent } from './components/pokedex-shell/welcome.component';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'regions',
-    pathMatch: 'full'
+    component: WelcomeComponent
   },
   {
     path: 'regions',

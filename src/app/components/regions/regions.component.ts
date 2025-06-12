@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { RegionService, Region } from '../../services/region.service';
 import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component';
 
@@ -9,7 +9,7 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
   standalone: true,
   imports: [CommonModule, RouterModule, PokedexFrameComponent],
   template: `
-    <app-pokedex-frame>
+    <app-pokedex-frame (volver)="volver()">
       <div class="regions-content">
         <h1>Selecciona una Región</h1>
         <div class="regions-grid">
@@ -65,12 +65,16 @@ import { PokedexFrameComponent } from '../pokedex-frame/pokedex-frame.component'
 export class RegionsComponent implements OnInit {
   regions: Region[] = [];
 
-  constructor(private regionService: RegionService) {}
+  constructor(private regionService: RegionService, private router: Router) {}
 
   ngOnInit() {
     this.regionService.getRegions().subscribe(
       regions => this.regions = regions,
       error => console.error('Error loading regions:', error)
     );
+  }
+
+  volver() {
+    this.router.navigate(['/']);
   }
 } 

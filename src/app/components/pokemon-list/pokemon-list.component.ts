@@ -1,29 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../services/pokemon.service';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <div class="pokemon-grid">
-      <div *ngFor="let pokemon of pokemonList" class="pokemon-card">
-        <img [src]="pokemon.sprites.front_default" [alt]="pokemon.name">
-        <h3>{{ pokemon.name | titlecase }}</h3>
-        <div class="types">
-          <span *ngFor="let type of pokemon.types" class="type-badge" [class]="type.type.name">
-            {{ type.type.name }}
-          </span>
+    <app-pokedex-frame (volver)="volver()">
+      <div class="pokemon-grid">
+        <div *ngFor="let pokemon of pokemonList" class="pokemon-card">
+          <img [src]="pokemon.sprites.front_default" [alt]="pokemon.name">
+          <h3>{{ pokemon.name | titlecase }}</h3>
+          <div class="types">
+            <span *ngFor="let type of pokemon.types" class="type-badge" [class]="type.type.name">
+              {{ type.type.name }}
+            </span>
+          </div>
+          <a [routerLink]="['/pokemon', pokemon.name]" class="details-link">Ver detalles</a>
         </div>
-        <a [routerLink]="['/pokemon', pokemon.name]" class="details-link">Ver detalles</a>
       </div>
-    </div>
-    <div class="pagination">
-      <button (click)="previousPage()" [disabled]="!hasPrevious">Anterior</button>
-      <button (click)="nextPage()" [disabled]="!hasNext">Siguiente</button>
-    </div>
+      <div class="pagination">
+        <button (click)="previousPage()" [disabled]="!hasPrevious">Anterior</button>
+        <button (click)="nextPage()" [disabled]="!hasNext">Siguiente</button>
+      </div>
+    </app-pokedex-frame>
   `,
   styles: [`
     .pokemon-grid {
@@ -123,7 +125,7 @@ export class PokemonListComponent implements OnInit {
   private offset: number = 0;
   private limit: number = 20;
 
-  constructor(private pokemonService: PokemonService) {}
+  constructor(private pokemonService: PokemonService, private router: Router) {}
 
   ngOnInit() {
     this.loadPokemon();
@@ -151,5 +153,9 @@ export class PokemonListComponent implements OnInit {
   previousPage() {
     this.offset -= this.limit;
     this.loadPokemon();
+  }
+
+  volver() {
+    this.router.navigate(['/regions']);
   }
 } 
